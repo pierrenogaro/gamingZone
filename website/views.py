@@ -1,3 +1,4 @@
 from django.shortcuts import render
 
-# Create your views here.
+def games_page(request):
+    return render(request, 'website/game/game_page.html')
