@@ -1,15 +1,28 @@
-<h2>Cémantix Game</h2>
-<form method="post">
-    {% csrf_token %}
-    <label for="word">Enter a word:</label>
-    <input type="text" name="word" id="word" required>
-    <button type="submit">Submit</button>
-</form>
-<p>{{ message }}</p>
+{% extends 'website/base.html' %}
 
-<h3>Previous Attempts:</h3>
-<ul>
-    {% for attempt in attempts %}
-        <li>{{ attempt.word }} - Similarity: {{ attempt.similarity }}%</li>
-    {% endfor %}
-</ul>
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+            <h2 class="mb-0">Cémantix Game</h2>
+        </div>
+        <div class="card-body">
+            <form method="post" class="mb-3">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="word" class="form-label">Enter a word:</label>
+                    <input type="text" name="word" id="word" class="form-control" placeholder="Type your guess here..." required>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success btn-block">Submit</button>
+                </div>
+            </form>
+            {% if message %}
+                <div class="alert alert-info mt-3" role="alert">
+                    {{ message }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
