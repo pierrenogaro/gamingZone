@@ -1,0 +1,15 @@
+<h2>Cémantix Game</h2>
+<form method="post">
+    {% csrf_token %}
+    <label for="word">Enter a word:</label>
+    <input type="text" name="word" id="word" required>
+    <button type="submit">Submit</button>
+</form>
+<p>{{ message }}</p>
+
+<h3>Previous Attempts:</h3>
+<ul>
+    {% for attempt in attempts %}
+        <li>{{ attempt.word }} - Similarity: {{ attempt.similarity }}%</li>
+    {% endfor %}
+</ul>
