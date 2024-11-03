@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from website.models import Guess
+from website.models import Hangman, Cemantix
 import spacy
 import random
 
@@ -16,7 +16,7 @@ token_secret_word = nlp(SECRET_WORD)
 
 def cemantix_game(request):
     message = ""
-    guesses = Guess.objects.all()
+    guesses = Cemantix.objects.all()
 
     if request.method == "POST":
         given_word = request.POST.get('word') # retrieves the value form
@@ -25,7 +25,7 @@ def cemantix_game(request):
             similarity = token_given_word.similarity(token_secret_word)
             similarity = round(similarity * 100, 2)
 
-            Guess.objects.create(word=given_word, similarity=similarity) # save in bdd
+            Cemantix.objects.create(word=given_word, similarity=similarity) # save in bdd
 
             message = f"Your word '{given_word}' has a similarity of {similarity}% with the secret word."
 
@@ -38,7 +38,7 @@ def cemantix_game(request):
 def cemantix_change_word(similarity):
     global SECRET_WORD, token_secret_word
     if similarity == 100:
-        Guess.objects.all().delete()
+        Cemantix.objects.all().delete()
         SECRET_WORD = random.choice(words)
         token_secret_word = nlp(SECRET_WORD)
 
@@ -53,6 +53,9 @@ def hangman_game(request):
         letter + " " if letter in guesse_letter else "_ "
         for letter in solution
     )
+
+    Hangman.objects.create(solution=solution, guesse_letter=guesse_letter)
+
 
     return render(request, 'website/hangman/game.html', {'see': see,'solution': solution,'guesse_letter': guesse_letter})
 
