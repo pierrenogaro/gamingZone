@@ -3,6 +3,8 @@ from website.models import Guess
 import spacy
 import random
 
+######################## CEMANTIX ########################
+
 nlp = spacy.load("en_core_web_lg")
 
 words = [
@@ -14,6 +16,8 @@ token_secret_word = nlp(SECRET_WORD)
 
 def cemantix_game(request):
     message = ""
+    guesses = Guess.objects.all()
+
     if request.method == "POST":
         given_word = request.POST.get('word') # retrieves the value form
         if given_word:
@@ -29,13 +33,16 @@ def cemantix_game(request):
                 cemantix_change_word(similarity)
                 message += f"GG! You've found the secret word '{given_word}'. A new secret word has been set."
 
-    return render(request, 'website/cemantix/game.html', {'message': message})
+    return render(request, 'website/cemantix/game.html', {'message': message, 'guesses': guesses})
 
 def cemantix_change_word(similarity):
     global SECRET_WORD, token_secret_word
     if similarity == 100:
+        Guess.objects.all().delete()
         SECRET_WORD = random.choice(words)
         token_secret_word = nlp(SECRET_WORD)
+
+######################## CEMANTIX ########################
 
 def games_page(request):
     return render(request, 'website/game/game_page.html')

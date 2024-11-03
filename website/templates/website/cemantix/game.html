@@ -22,6 +22,17 @@
                     {{ message }}
                 </div>
             {% endif %}
+
+            <h3 class="mt-4">Guessed Words History</h3>
+            <ul class="list-group mt-2">
+                {% for guess in guesses %}
+                    <li class="list-group-item">
+                        Word: {{ guess.word }} - Similarity: {{ guess.similarity }}%
+                    </li>
+                {% empty %}
+                    <li class="list-group-item text-muted">No guesses yet. Try to guess a word!</li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
 </div>
