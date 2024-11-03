@@ -42,7 +42,21 @@ def cemantix_change_word(similarity):
         SECRET_WORD = random.choice(words)
         token_secret_word = nlp(SECRET_WORD)
 
-######################## CEMANTIX ########################
+######################## HANGMAN ########################
+
+WORDS_HANG = ["cat", "dog", "car", "house", "tree"]
+
+def hangman_game(request):
+    random_word = random.choice(WORDS_HANG)
+    solution = request.POST.get('solution', random_word)
+    guesse_letter = request.POST.get('guesse_letter', '') + request.POST.get('guess', '')
+    see = ''.join(
+        letter + " " if letter in guesse_letter else "_ "
+        for letter in solution
+    )
+
+    return render(request, 'website/hangman/game.html', {'see': see,'solution': solution,'guesse_letter': guesse_letter})
+
 
 def games_page(request):
     return render(request, 'website/game/game_page.html')
