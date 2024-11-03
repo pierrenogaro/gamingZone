@@ -45,6 +45,10 @@ def cemantix_change_word(similarity):
 ######################## HANGMAN ########################
 
 WORDS_HANG = ["cat", "dog", "car", "house", "tree"]
+life = 7
+
+def hang_lose(guessed_letters):
+    return len(guessed_letters) == life
 
 def hangman_game(request):
     solution = request.POST.get('solution', random.choice(WORDS_HANG))
@@ -59,8 +63,11 @@ def hangman_game(request):
     if "_" not in see:
         return render(request, 'website/hangman/win.html', {'solution': solution})
 
+    if hang_lose(guesse_letter):
+        return render(request, 'website/hangman/lose.html', {'solution': solution})
+
     return render(request, 'website/hangman/game.html', {'see': see,'solution': solution,'guesse_letter': guesse_letter})
 
-
+######################## HANGMAN ########################
 def games_page(request):
     return render(request, 'website/game/game_page.html')
