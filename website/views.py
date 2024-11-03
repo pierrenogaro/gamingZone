@@ -31,7 +31,7 @@ def cemantix_game(request):
 
             if similarity == 100:
                 cemantix_change_word(similarity)
-                message += f"GG! You've found the secret word '{given_word}'. A new secret word has been set."
+                message += f" A new secret word has been set."
 
     return render(request, 'website/cemantix/game.html', {'message': message, 'guesses': guesses})
 
