@@ -3,17 +3,21 @@
 {% block content %}
 <div class="container mt-5">
     <div class="card shadow-lg">
-        <div class="card-header bg-primary text-white text-center">
-            <h2 class="mb-0">Hangman Game</h2>
+        <div class="card-header bg-gradient bg-primary text-white text-center py-4">
+            <h2 class="mb-0 fw-bold">Hangman Game</h2>
         </div>
         <div class="card-body text-center">
-            <h3>Word to guess: {{ see }}</h3>
-            <form method="post">
+            <h3 class="mb-4">Word to guess: <span class="text-secondary">{{ see }}</span></h3>
+            <p class="mb-4 fw-bold">Current Score: <span class="text-primary">{{ score }}</span></p>
+            <form method="post" class="d-flex flex-column align-items-center">
                 {% csrf_token %}
                 <input type="hidden" name="solution" value="{{ solution }}">
                 <input type="hidden" name="guesse_letter" value="{{ guesse_letter }}">
-                <input type="text" name="guess" maxlength="1" required class="form-control d-inline w-auto">
-                <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                <div class="input-group w-50">
+                    <input type="text" name="guess" maxlength="1" required class="form-control border-primary" placeholder="Enter a letter" aria-label="Guess">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+                <small class="form-text text-muted mt-2">Enter one letter at a time.</small>
             </form>
         </div>
     </div>
