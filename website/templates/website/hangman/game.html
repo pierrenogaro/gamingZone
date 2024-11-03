@@ -8,7 +8,6 @@
         </div>
         <div class="card-body text-center">
             <h3 class="mb-4">Word to guess: <span class="text-secondary">{{ see }}</span></h3>
-            <p class="mb-4 fw-bold">Current Score: <span class="text-primary">{{ score }}</span></p>
             <form method="post" class="d-flex flex-column align-items-center">
                 {% csrf_token %}
                 <input type="hidden" name="solution" value="{{ solution }}">

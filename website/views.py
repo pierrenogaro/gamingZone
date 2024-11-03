@@ -1,5 +1,8 @@
-from django.shortcuts import render
-from website.models import Hangman, Cemantix
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from website.forms import SignupForm, LoginForm
+from website.models import Hangman, Cemantix, Score
 import spacy
 import random
 
@@ -14,9 +17,11 @@ words = [
 SECRET_WORD = random.choice(words)
 token_secret_word = nlp(SECRET_WORD)
 
+@login_required
 def cemantix_game(request):
     message = ""
     guesses = Cemantix.objects.all()
+    user_score, _ = Score.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
         given_word = request.POST.get('word') # retrieves the value form
@@ -30,6 +35,8 @@ def cemantix_game(request):
             message = f"Your word '{given_word}' has a similarity of {similarity}% with the secret word."
 
             if similarity == 100:
+                user_score.points += 10
+                user_score.save()
                 cemantix_change_word(similarity)
                 message += f" A new secret word has been set."
 
@@ -46,15 +53,15 @@ def cemantix_change_word(similarity):
 
 WORDS_HANG = ["hockey", "canada", "beer", "pizza", "python"]
 life = 7
-score = 0
 
 def hang_lose(guessed_letters):
     return len(guessed_letters) == life
 
+@login_required
 def hangman_game(request):
-    global score
     solution = request.POST.get('solution', random.choice(WORDS_HANG))
     guesse_letter = request.POST.get('guesse_letter', '') + request.POST.get('guess', '')
+    user_score, _ = Score.objects.get_or_create(user=request.user)
     see = ''.join(
         letter + " " if letter in guesse_letter else "_ "
         for letter in solution
@@ -63,15 +70,45 @@ def hangman_game(request):
     Hangman.objects.create(solution=solution, guesse_letter=guesse_letter)
 
     if "_" not in see:
-        score += 1
+        user_score.points += 5
+        user_score.save()
         return render(request, 'website/hangman/win.html', {'solution': solution})
 
     if hang_lose(guesse_letter):
-        score -= 1
+        user_score.points -= 2
+        user_score.save()
         return render(request, 'website/hangman/lose.html', {'solution': solution})
 
-    return render(request, 'website/hangman/game.html', {'see': see,'solution': solution,'guesse_letter': guesse_letter, 'score': score})
+    return render(request, 'website/hangman/game.html', {'see': see, 'solution': solution, 'guesse_letter': guesse_letter, 'score': user_score.points})
 
-######################## HANGMAN ########################
+######################## GAMES ########################
 def games_page(request):
     return render(request, 'website/game/game_page.html')
+
+######################## REGISTRATION ########################
+
+def user_signup(request):
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = SignupForm()
+    return render(request, 'website/registration/signup.html', {'form': form})
+def user_login(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            if user:
+                login(request, user)
+                return redirect('games_page')
+    else:
+        form = LoginForm()
+    return render(request, 'website/registration/login.html', {'form': form})
+def user_logout(request):
+    logout(request)
+    return redirect('login')
