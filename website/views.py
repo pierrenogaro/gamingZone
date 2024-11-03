@@ -47,8 +47,7 @@ def cemantix_change_word(similarity):
 WORDS_HANG = ["cat", "dog", "car", "house", "tree"]
 
 def hangman_game(request):
-    random_word = random.choice(WORDS_HANG)
-    solution = request.POST.get('solution', random_word)
+    solution = request.POST.get('solution', random.choice(WORDS_HANG))
     guesse_letter = request.POST.get('guesse_letter', '') + request.POST.get('guess', '')
     see = ''.join(
         letter + " " if letter in guesse_letter else "_ "
