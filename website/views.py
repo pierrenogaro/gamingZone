@@ -25,8 +25,17 @@ def cemantix_game(request):
 
             message = f"Your word '{given_word}' has a similarity of {similarity}% with the secret word."
 
+            if similarity == 100:
+                cemantix_change_word(similarity)
+                message += f"GG! You've found the secret word '{given_word}'. A new secret word has been set."
+
     return render(request, 'website/cemantix/game.html', {'message': message})
 
+def cemantix_change_word(similarity):
+    global SECRET_WORD, token_secret_word
+    if similarity == 100:
+        SECRET_WORD = random.choice(words)
+        token_secret_word = nlp(SECRET_WORD)
 
 def games_page(request):
     return render(request, 'website/game/game_page.html')
