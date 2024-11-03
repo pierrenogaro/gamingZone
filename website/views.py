@@ -56,6 +56,8 @@ def hangman_game(request):
 
     Hangman.objects.create(solution=solution, guesse_letter=guesse_letter)
 
+    if "_" not in see:
+        return render(request, 'website/hangman/win.html', {'solution': solution})
 
     return render(request, 'website/hangman/game.html', {'see': see,'solution': solution,'guesse_letter': guesse_letter})
 

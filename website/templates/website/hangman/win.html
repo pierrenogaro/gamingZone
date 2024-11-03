@@ -1,0 +1,16 @@
+{% extends 'website/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-success text-white text-center">
+            <h2 class="mb-0">Congratulations!</h2>
+        </div>
+        <div class="card-body text-center">
+            <h3 class="mb-3">You have guessed the word correctly!</h3>
+            <p>The secret word was: <strong>{{ solution }}</strong></p>
+            <a href="{% url 'hangman_game' %}" class="btn btn-primary mt-3">Play Again</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
