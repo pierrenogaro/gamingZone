@@ -1,0 +1,31 @@
+{% extends 'website/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4 display-4 fw-bold text-primary">Leader Board</h2>
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-secondary text-white text-center">
+                <tr class="text-black">
+                    <th scope="col">Rank</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for score in scores %}
+                    <tr>
+                        <td class="text-center fw-semibold text-danger">{{ forloop.counter }}</td>
+                        <td class="text-start ps-3 text-white">{{ score.user.username }}</td>
+                        <td class="text-center text-success fw-bold">{{ score.points }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center fst-italic text-muted py-3">No scores available yet.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

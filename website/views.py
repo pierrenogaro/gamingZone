@@ -88,6 +88,11 @@ def hangman_game(request):
 def games_page(request):
     return render(request, 'website/game/game_page.html')
 
+@login_required
+def leaderboard(request):
+    scores = Score.objects.select_related('user').order_by('-points')
+    return render(request, 'website/leaderboard/index.html', {'scores': scores})
+
 ######################## REGISTRATION ########################
 
 def user_signup(request):
