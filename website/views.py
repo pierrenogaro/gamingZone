@@ -38,7 +38,10 @@ def cemantix_game(request):
                 user_score.points += 10
                 user_score.save()
                 cemantix_change_word(similarity)
-                message += f" A new secret word has been set."
+                message += " A new secret word has been set."
+            else:
+                user_score.points -= 1
+                user_score.save()
 
     return render(request, 'website/cemantix/game.html', {'message': message, 'guesses': guesses})
 
@@ -52,10 +55,10 @@ def cemantix_change_word(similarity):
 ######################## HANGMAN ########################
 
 WORDS_HANG = ["hockey", "canada", "beer", "pizza", "python"]
-life = 7
+life_hang = 7
 
 def hang_lose(guessed_letters):
-    return len(guessed_letters) == life
+    return len(guessed_letters) == life_hang
 
 @login_required
 def hangman_game(request):
@@ -75,7 +78,7 @@ def hangman_game(request):
         return render(request, 'website/hangman/win.html', {'solution': solution})
 
     if hang_lose(guesse_letter):
-        user_score.points -= 2
+        user_score.points -= 10
         user_score.save()
         return render(request, 'website/hangman/lose.html', {'solution': solution})
 
