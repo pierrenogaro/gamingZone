@@ -1,0 +1,35 @@
+{% extends 'website/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header text-center bg-primary text-white">
+            {% if message == "Congratulations! You found the correct code." %}
+                <i class="bi bi-unlock-fill" style="font-size: 5em;"></i>
+            {% else %}
+                <i class="bi bi-lock-fill" style="font-size: 5em;"></i>
+            {% endif %}
+            <h2>Lock Game</h2>
+        </div>
+        <div class="card-body">
+            <p class="mb-3 text-center">Guess the 4-digit lock code.</p>
+            <p class="text-center font-italic mb-4">Riddle: <strong>{{ riddle }}</strong></p>
+
+            <form method="post" class="d-flex flex-column align-items-center">
+                {% csrf_token %}
+                <div class="mb-3 w-50">
+                    <label for="attempt" class="form-label">Enter the code:</label>
+                    <input type="text" name="attempt" class="form-control" id="attempt" maxlength="4" required>
+                </div>
+                <button type="submit" class="btn btn-success">Submit</button>
+            </form>
+
+            {% if message %}
+            <div class="alert alert-info mt-3 text-center">
+                {{ message }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

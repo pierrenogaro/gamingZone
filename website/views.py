@@ -92,8 +92,45 @@ def games_page(request):
 
 @login_required
 def leaderboard(request):
-    scores = Score.objects.select_related('user').order_by('-points')
+    scores = Score.objects.all().order_by('-points')
     return render(request, 'website/leaderboard/index.html', {'scores': scores})
+
+######################## LOCK ########################
+
+code1 = "1234"
+code2 = "4321"
+code3 = "1357"
+code4 = "2468"
+
+code = random.choice([code1, code2, code3, code4])
+@login_required
+def lock_game(request):
+    global code
+    message = ""
+
+    if code == code1:
+        riddle = "I am the natural sequence following twelve thirty-three. What is this number?"
+    elif code == code2:
+        riddle = "I am the reverse of a simple sequence from 1 to 4. What is this number?"
+    elif code == code3:
+        riddle = "I am a sequence of odd digits, with no even digits. What is this number?"
+    elif code == code4:
+        riddle = "I am a sequence where each digit is even and increases by 2. What is this number?"
+    else:
+        riddle = "No riddle available."
+
+    if request.method == "POST":
+        attempt = request.POST.get('attempt')
+        if attempt:
+            if attempt == code:
+                message = "Congratulations! You found the correct code."
+
+                code = random.choice([code1, code2, code3, code4]) # reset
+            else:
+                message = f"Incorrect code. Try again with this riddle: {riddle}"
+
+    return render(request, 'website/lock/game.html', {'message': message, 'riddle': riddle})
+
 
 ######################## REGISTRATION ########################
 
