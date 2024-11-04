@@ -65,10 +65,12 @@ def hangman_game(request):
     solution = request.POST.get('solution', random.choice(WORDS_HANG))
     guesse_letter = request.POST.get('guesse_letter', '') + request.POST.get('guess', '')
     user_score, _ = Score.objects.get_or_create(user=request.user)
-    see = ''.join(
-        letter + " " if letter in guesse_letter else "_ "
-        for letter in solution
-    )
+    see = ""
+    for letter in solution:
+        if letter in guesse_letter:
+            see = see + letter + " "
+        else:
+            see = see + "_ "
 
     Hangman.objects.create(solution=solution, guesse_letter=guesse_letter)
 
