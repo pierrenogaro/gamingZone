@@ -54,33 +54,67 @@ def cemantix_change_word(similarity):
 
 
 ######################## CROSSWORD ########################
-
+@login_required
 def crossword_game(request):
-
-    words_cross = ["apple", "table", "beach", "candy", "snake"]
+    words_cross = [
+        ['a', 'p', 'p', 'l', 'e'],
+        ['t', 'a', 'b', 'l', 'e'],
+        ['b', 'e', 'a', 'c', 'h'],
+        ['c', 'a', 'n', 'd', 'y'],
+        ['s', 'n', 'a', 'k', 'e']
+    ]
 
     grid = [
         ['a', '', '', '', ''],
-        ['', 't', '', '', ''],
-        ['', '', 'e', '', ''],
+        ['', '', 'b', '', ''],
+        ['', 'e', '', '', ''],
         ['', '', '', 'd', ''],
-        ['', '', '', '', 's']
+        ['', '', '', '', 'e']
     ]
 
-    grid_template = [{'cells': row} for row in grid]
+    user_score, _ = Score.objects.get_or_create(user=request.user)
+    message = ""
+    is_fully_completed = True
+    is_correct = True
 
-    clues = {
-        1: "A common fruit",
-        2: "Furniture with legs",
-        3: "Sandy place by the sea",
-        4: "Sweet treat",
-        5: "Slithering animal"
-    }
+    if request.method == "POST":
+        for i in range(5):
+            for j in range(5):
+                if grid[i][j] == '':
+                    user_input = request.POST.get(f'cell-{i}-{j}')
+                    if not user_input:
+                        is_fully_completed = False
+
+        if is_fully_completed:
+            for i in range(5):
+                for j in range(5):
+                    if grid[i][j] == '':
+                        user_input = request.POST.get(f'cell-{i}-{j}')
+                        if user_input == words_cross[i][j]:
+                            user_score.points += 1
+                        else:
+                            user_score.points -= 1
+                            is_correct = False
+            user_score.save()
+
+            if is_correct:
+                return render(request, 'website/crossword/victory.html')
+
+            message = f"Your score is {user_score.points}."
+        else:
+            message = "Please complete the entire grid before submitting."
 
     return render(request, 'website/crossword/game.html', {
-        'grid': grid_template,
-        'clues': clues,
-        'words': words_cross
+        'grid': grid,
+        'clues': {
+            1: "A common fruit",
+            2: "Furniture with legs",
+            3: "Sandy place by the sea",
+            4: "Sweet treat",
+            5: "Slithering animal"
+        },
+        'message': message,
+        'score': user_score.points
     })
 
 ######################## HANGMAN ########################

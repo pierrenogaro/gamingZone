@@ -11,9 +11,9 @@
                 {% csrf_token %}
                 <div class="table-responsive">
                     <table class="table table-bordered">
-                        {% for row in grid %}
+                        {% for i in grid %}
                             <tr>
-                                {% for cell in row.cells %}
+                                {% for cell in i %}
                                     <td>
                                         {% if cell %}
                                             <input type="text" maxlength="1" class="form-control text-center" style="color: red; background-color: #f8f9fa;" value="{{ cell }}" readonly>
@@ -26,10 +26,12 @@
                         {% endfor %}
                     </table>
                 </div>
-                <div class="d-grid mt-3">
-                    <button type="submit" class="btn btn-success btn-block">Submit</button>
-                </div>
+                <button type="submit" class="btn btn-success btn-block mt-3">Submit Answers</button>
             </form>
+
+            {% if message %}
+                <div class="alert alert-info mt-3">{{ message }}</div>
+            {% endif %}
 
             <div class="mt-4">
                 <h3>Clues:</h3>
