@@ -99,8 +99,6 @@ def crossword_game(request):
 
             if is_correct:
                 return render(request, 'website/crossword/victory.html')
-
-            message = f"Your score is {user_score.points}."
         else:
             message = "Please complete the entire grid before submitting."
 
