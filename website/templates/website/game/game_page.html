@@ -25,6 +25,17 @@
             </div>
         </div>
 
+       <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-emoji-smile"></i> Crossword</h5>
+                <p class="card-text">Test your skills by solving the hidden word puzzle, one letter at a time!</p>
+                {% if user.is_authenticated %}
+                <a href="{% url 'crossword_game' %}" class="btn btn-primary"><i class="bi bi-play-circle"></i> Play</a>
+                {% endif %}
+            </div>
+        </div>
+
+
         <div class="card mb-4 shadow-sm">
             <div class="card-body">
                 <h5 class="card-title"><i class="bi bi-hourglass-split"></i>Lock</h5>
