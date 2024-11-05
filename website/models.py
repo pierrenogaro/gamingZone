@@ -18,3 +18,7 @@ class Score(models.Model):
 
     def __str__(self):
         return f"{self.user.username}: {self.points}"
+
+class Crossword(models.Model):
+    word = models.CharField(max_length=5)
+    clue = models.CharField(max_length=255)

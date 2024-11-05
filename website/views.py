@@ -52,6 +52,37 @@ def cemantix_change_word(similarity):
         SECRET_WORD = random.choice(words)
         token_secret_word = nlp(SECRET_WORD)
 
+
+######################## CROSSWORD ########################
+
+def crossword_game(request):
+
+    words_cross = ["apple", "table", "beach", "candy", "snake"]
+
+    grid = [
+        ['a', '', '', '', ''],
+        ['', 't', '', '', ''],
+        ['', '', 'e', '', ''],
+        ['', '', '', 'd', ''],
+        ['', '', '', '', 's']
+    ]
+
+    grid_template = [{'cells': row} for row in grid]
+
+    clues = {
+        1: "A common fruit",
+        2: "Furniture with legs",
+        3: "Sandy place by the sea",
+        4: "Sweet treat",
+        5: "Slithering animal"
+    }
+
+    return render(request, 'website/crossword/game.html', {
+        'grid': grid_template,
+        'clues': clues,
+        'words': words_cross
+    })
+
 ######################## HANGMAN ########################
 
 WORDS_HANG = ["hockey", "canada", "beer", "pizza", "python"]
